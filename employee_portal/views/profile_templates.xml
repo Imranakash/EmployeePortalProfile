@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_profile_template" name="My Profile Portal" xmlns:t="http://www.w3.org/1999/XSL/Transform">
+        <t t-call="portal.portal_layout">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-2 mb-4">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="/my/home">
+                        <img src="/web/binary/company_logo" style="height: 32px;" alt="Logo"/>
+                    </a>
+
+                    <div class="collapse navbar-collapse justify-content-center">
+                        <ul class="navbar-nav gap-2">
+                            <li class="nav-item">
+                                <a t-attf-class="nav-link px-3 #{'bg-light fw-bold text-dark rounded-pill' if page_name == 'my_home' else 'text-muted'}" href="/my/home">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a t-attf-class="nav-link px-3 #{'bg-light fw-bold text-dark rounded-pill' if page_name == 'my_org' else 'text-muted'}" href="/my/employees">Organization</a>
+                            </li>
+                            <li class="nav-item">
+                                <a t-attf-class="nav-link px-3 #{'bg-light fw-bold text-dark rounded-pill' if page_name == 'my_profile' else 'text-muted'}" href="/my/profile">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a t-attf-class="nav-link px-3 #{'bg-light fw-bold text-dark rounded-pill' if page_name == 'my_documents' else 'text-muted'}" href="/my/documents">Documents</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="position-relative">
+                            <i class="fa fa-bell-o text-muted fs-5"/>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-info border border-light rounded-circle"/>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle bg-secondary text-white fw-bold shadow-sm"
+                             style="width: 38px; height: 38px; font-size: 14px; line-height: 1;">
+                            <t t-if="employee and employee.name">
+                                <t t-esc="employee.name[:2].upper()"/>
+                            </t>
+                            <t t-else="">AD</t>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <style>
+                :root {
+                    --odoo-purple: #714B67;
+                    --odoo-purple-mist: #F4EDF2;
+                    --odoo-teal: #00A09D;
+                }
+                .profile-card-header {
+                    height: 80px;
+                    background: linear-gradient(135deg, var(--odoo-purple) 0%, #8E6585 100%);
+                    border-radius: 14px 14px 0 0;
+                }
+                .avatar-main {
+                    width: 90px; height: 90px;
+                    border-radius: 50%;
+                    background: var(--odoo-teal);
+                    border: 4px solid white;
+                    margin-top: -45px;
+                    font-size: 2rem;
+                }
+                .nav-link-side {
+                    display: flex; align-items: center; gap: 10px;
+                    padding: 12px 15px; border-radius: 10px;
+                    color: #666; text-decoration: none; font-weight: 500;
+                }
+                .nav-link-side.active {
+                    background: var(--odoo-purple-mist);
+                    color: var(--odoo-purple);
+                }
+                .info-card {
+                    border-radius: 14px; border: none;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+                    background: #fff;
+                }
+                .label-title {
+                    font-size: 10px; color: #999;
+                    font-weight: 700; text-transform: uppercase;
+                }
+            </style>
+
+            <div class="container pb-5">
+                <div class="row g-4 text-start">
+                    <aside class="col-lg-3">
+                        <div class="card info-card text-center pb-4">
+                            <div class="profile-card-header"/>
+                            <div class="d-flex justify-content-center">
+                                <div class="avatar-main d-flex align-items-center justify-content-center text-white fw-bold shadow-sm">
+                                    <t t-if="employee and employee.name">
+                                        <t t-esc="employee.name[:2].upper()"/>
+                                    </t>
+                                    <t t-else="">AD</t>
+                                </div>
+                            </div>
+                            <h4 class="fw-bold mt-3 mb-1">
+                                <t t-if="employee" t-esc="employee.name"/>
+                                <t t-else="">Employee Not Found</t>
+                            </h4>
+                            <p class="text-muted small mb-3">
+                                <t t-if="employee" t-esc="employee.job_title or 'Position Not Set'"/>
+                                <t t-else="">Unknown Position</t>
+                            </p>
+                            <div class="px-3">
+                                <span class="badge rounded-pill px-3 py-2 w-100" style="background-color: var(--odoo-purple-mist); color: var(--odoo-purple);">
+                                    <i class="fa fa-building-o me-2"/>
+                                    <t t-if="employee and employee.department_id" t-esc="employee.department_id.name"/>
+                                    <t t-else="">General</t>
+                                </span>
+                            </div>
+                            <div class="row g-0 border-top mt-4 pt-3 mx-2">
+                                <div class="col-6 border-end">
+                                    <small class="text-muted d-block" style="font-size: 9px;">EMPLOYEE ID</small>
+                                    <strong style="color: var(--odoo-purple);">
+                                        <t t-if="employee" t-esc="employee.id"/>
+                                        <t t-else="">N/A</t>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card info-card mt-4 p-2">
+                            <a href="#personal" class="nav-link-side active"><i class="fa fa-user-o"/> Personal Info</a>
+                            <a href="#work" class="nav-link-side"><i class="fa fa-briefcase"/> Work Information</a>
+                            <a href="#security" class="nav-link-side"><i class="fa fa-lock"/> Security</a>
+                        </div>
+                    </aside>
+
+                    <main class="col-lg-9">
+                        <div class="row g-4">
+                            <div class="col-md-6" id="personal">
+                                <div class="card info-card p-4 h-100">
+                                    <h6 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-id-card-o me-2 text-muted"/>Personal Details</h6>
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <p class="label-title">Full Name</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee" t-esc="employee.name"/></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Work Email</p>
+                                            <p class="fw-bold mb-0 small text-primary"><t t-if="employee" t-esc="employee.work_email or 'n/a'"/></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Work Phone</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee" t-esc="employee.work_phone or 'n/a'"/></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Private Email</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee" t-esc="employee.private_email or 'n/a'"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" id="work">
+                                <div class="card info-card p-4 h-100">
+                                    <h6 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-briefcase me-2 text-muted"/>Work Information</h6>
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <p class="label-title">Manager</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee and employee.parent_id" t-esc="employee.parent_id.name"/><t t-else="">Not Assigned</t></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Coach</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee and employee.coach_id" t-esc="employee.coach_id.name"/><t t-else="">Not Assigned</t></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Job Position</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee and employee.job_id" t-esc="employee.job_id.name"/><t t-else="">n/a</t></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="label-title">Company</p>
+                                            <p class="fw-bold mb-0 small text-dark"><t t-if="employee and employee.company_id" t-esc="employee.company_id.name"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12" id="security">
+                                <div class="card info-card p-4">
+                                    <h6 class="fw-bold mb-3"><i class="fa fa-shield me-2 text-muted"/>Security &amp; Password</h6>
+                                    <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-white p-2 rounded shadow-sm text-center" style="width: 40px;"><i class="fa fa-key text-muted"/></div>
+                                            <div><p class="fw-bold small mb-0">Portal Password</p><p class="text-muted small mb-0" style="font-size: 11px;">Change your password to keep your account secure.</p></div>
+                                        </div>
+                                        <a href="/my/account" class="btn btn-sm btn-outline-secondary px-4 rounded-pill">Update</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
